@@ -1,0 +1,4162 @@
+openapi: 3.0.3
+info:
+  title: Made API
+  version: 1.0.0
+  description: Made API documentation
+paths:
+  /api/schema/:
+    get:
+      operationId: schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - de-de
+          - en-us
+          - es-es
+          - fr-fr
+          - hi-in
+          - ja-jp
+          - ko-kr
+          - pt-br
+          - ru-ru
+          - vi-vn
+      tags:
+      - schema
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/chat-sessions/brainstorms/:
+    get:
+      operationId: v1_chat_sessions_brainstorms_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSessionBrainstorm'
+          description: ''
+    post:
+      operationId: v1_chat_sessions_brainstorms_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionBrainstorm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatSessionBrainstorm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatSessionBrainstorm'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionBrainstorm'
+          description: ''
+  /api/v1/chat-sessions/brainstorms/{id}/:
+    get:
+      operationId: v1_chat_sessions_brainstorms_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session brainstorm.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionBrainstorm'
+          description: ''
+    put:
+      operationId: v1_chat_sessions_brainstorms_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session brainstorm.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionBrainstorm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatSessionBrainstorm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatSessionBrainstorm'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionBrainstorm'
+          description: ''
+    patch:
+      operationId: v1_chat_sessions_brainstorms_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session brainstorm.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSessionBrainstorm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSessionBrainstorm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSessionBrainstorm'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionBrainstorm'
+          description: ''
+    delete:
+      operationId: v1_chat_sessions_brainstorms_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session brainstorm.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/chat-sessions/messages/:
+    get:
+      operationId: v1_chat_sessions_messages_list
+      parameters:
+      - in: query
+        name: chat_session
+        schema:
+          type: string
+      - in: query
+        name: order_by
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - -created_at
+            - created_at
+        description: |-
+          Ordenado
+
+          * `created_at` - Created at
+          * `-created_at` - Created at (descending)
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedChatSessionMessageList'
+          description: ''
+    post:
+      operationId: v1_chat_sessions_messages_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionMessage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatSessionMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatSessionMessage'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionMessage'
+          description: ''
+  /api/v1/chat-sessions/messages/{id}/:
+    get:
+      operationId: v1_chat_sessions_messages_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this chat session message.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionMessage'
+          description: ''
+    put:
+      operationId: v1_chat_sessions_messages_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this chat session message.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSessionMessage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatSessionMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatSessionMessage'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionMessage'
+          description: ''
+    patch:
+      operationId: v1_chat_sessions_messages_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this chat session message.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSessionMessage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSessionMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSessionMessage'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSessionMessage'
+          description: ''
+    delete:
+      operationId: v1_chat_sessions_messages_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this chat session message.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/chat-sessions/sessions/:
+    get:
+      operationId: v1_chat_sessions_sessions_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatSession'
+          description: ''
+    post:
+      operationId: v1_chat_sessions_sessions_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatSession'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+          description: ''
+  /api/v1/chat-sessions/sessions/{id}/:
+    get:
+      operationId: v1_chat_sessions_sessions_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+          description: ''
+    put:
+      operationId: v1_chat_sessions_sessions_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChatSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChatSession'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+          description: ''
+    patch:
+      operationId: v1_chat_sessions_sessions_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSession'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSession'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChatSession'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+          description: ''
+    delete:
+      operationId: v1_chat_sessions_sessions_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this chat session.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/content/videos/:
+    get:
+      operationId: v1_content_videos_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: privacy_status
+        schema:
+          type: string
+          enum:
+          - private
+          - public
+          - unlisted
+        description: |-
+          * `public` - Public
+          * `private` - Private
+          * `unlisted` - Unlisted
+      - in: query
+        name: published_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: published_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: title
+        schema:
+          type: string
+      - in: query
+        name: title__contains
+        schema:
+          type: string
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedVideoList'
+          description: ''
+    post:
+      operationId: v1_content_videos_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Video'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Video'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: ''
+  /api/v1/content/videos/{video_id}/:
+    get:
+      operationId: v1_content_videos_retrieve
+      parameters:
+      - in: path
+        name: video_id
+        schema:
+          type: string
+        description: A unique value identifying this video.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: ''
+    put:
+      operationId: v1_content_videos_update
+      parameters:
+      - in: path
+        name: video_id
+        schema:
+          type: string
+        description: A unique value identifying this video.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Video'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Video'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Video'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: ''
+    patch:
+      operationId: v1_content_videos_partial_update
+      parameters:
+      - in: path
+        name: video_id
+        schema:
+          type: string
+        description: A unique value identifying this video.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedVideo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedVideo'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedVideo'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: ''
+    delete:
+      operationId: v1_content_videos_destroy
+      parameters:
+      - in: path
+        name: video_id
+        schema:
+          type: string
+        description: A unique value identifying this video.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/content/youtube/available-channels/:
+    get:
+      operationId: v1_content_youtube_available_channels_retrieve
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/content/youtube/channels/:
+    get:
+      operationId: v1_content_youtube_channels_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/YoutubeChannel'
+          description: ''
+    post:
+      operationId: v1_content_youtube_channels_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/YoutubeChannel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/YoutubeChannel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/YoutubeChannel'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YoutubeChannel'
+          description: ''
+  /api/v1/content/youtube/channels/{id}/:
+    get:
+      operationId: v1_content_youtube_channels_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this youtube channel.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YoutubeChannel'
+          description: ''
+    put:
+      operationId: v1_content_youtube_channels_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this youtube channel.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/YoutubeChannel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/YoutubeChannel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/YoutubeChannel'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YoutubeChannel'
+          description: ''
+    patch:
+      operationId: v1_content_youtube_channels_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this youtube channel.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedYoutubeChannel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedYoutubeChannel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedYoutubeChannel'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YoutubeChannel'
+          description: ''
+    delete:
+      operationId: v1_content_youtube_channels_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this youtube channel.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/content/youtube/channels/greenlist/:
+    get:
+      operationId: v1_content_youtube_channels_greenlist_retrieve
+      description: |-
+        Check if a YouTube channel is greenlisted.
+
+        Query Parameters:
+        - channel_external_id: The external ID of the YouTube channel to check
+
+        Returns:
+        - 200 OK with {"is_greenlisted": true/false} if the check is successful
+        - 400 Bad Request if the channel_external_id parameter is missing
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/YoutubeChannel'
+          description: ''
+  /api/v1/content/youtube/comment-replies/:
+    post:
+      operationId: v1_content_youtube_comment_replies_create
+      tags:
+      - v1
+      responses:
+        '201':
+          description: No response body
+  /api/v1/content/youtube/subscription/:
+    get:
+      operationId: v1_content_youtube_subscription_retrieve
+      description: Handle the subscription verification challenge.
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: v1_content_youtube_subscription_create
+      description: Handle incoming YouTube webhook notifications.
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/content/youtube/thumbnail-upload/:
+    post:
+      operationId: v1_content_youtube_thumbnail_upload_create
+      tags:
+      - v1
+      responses:
+        '201':
+          description: No response body
+  /api/v1/image/segmentation/:
+    post:
+      operationId: v1_image_segmentation_create
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/messages/:
+    get:
+      operationId: v1_messages_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMessageList'
+          description: ''
+    post:
+      operationId: v1_messages_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Message'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Message'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+  /api/v1/messages/{message_id}/feedback/:
+    post:
+      operationId: v1_messages_feedback_create
+      parameters:
+      - in: path
+        name: message_id
+        schema:
+          type: string
+          pattern: ^\d+$
+        required: true
+      tags:
+      - v1
+      responses:
+        '201':
+          description: No response body
+  /api/v1/messages/{id}/:
+    get:
+      operationId: v1_messages_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+    put:
+      operationId: v1_messages_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Message'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Message'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Message'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+    patch:
+      operationId: v1_messages_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMessage'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMessage'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMessage'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+          description: ''
+    delete:
+      operationId: v1_messages_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/pinned-shortcuts/:
+    get:
+      operationId: v1_pinned_shortcuts_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PinnedShortcut'
+          description: ''
+    post:
+      operationId: v1_pinned_shortcuts_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinnedShortcut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PinnedShortcut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PinnedShortcut'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedShortcut'
+          description: ''
+  /api/v1/pinned-shortcuts/{id}/:
+    get:
+      operationId: v1_pinned_shortcuts_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this pinned shortcut.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedShortcut'
+          description: ''
+    put:
+      operationId: v1_pinned_shortcuts_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this pinned shortcut.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinnedShortcut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PinnedShortcut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PinnedShortcut'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedShortcut'
+          description: ''
+    patch:
+      operationId: v1_pinned_shortcuts_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this pinned shortcut.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPinnedShortcut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPinnedShortcut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPinnedShortcut'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PinnedShortcut'
+          description: ''
+    delete:
+      operationId: v1_pinned_shortcuts_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this pinned shortcut.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/projects/:
+    get:
+      operationId: v1_projects_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - in: query
+        name: search
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+          description: ''
+    post:
+      operationId: v1_projects_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+  /api/v1/projects/{id}/:
+    get:
+      operationId: v1_projects_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this project.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    put:
+      operationId: v1_projects_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this project.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Project'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Project'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    patch:
+      operationId: v1_projects_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this project.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProject'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+          description: ''
+    delete:
+      operationId: v1_projects_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this project.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/prompts/channel/:
+    get:
+      operationId: v1_prompts_channel_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+          description: ''
+    post:
+      operationId: v1_prompts_channel_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Channel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Channel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Channel'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+          description: ''
+  /api/v1/prompts/channel/{channel_id}/:
+    get:
+      operationId: v1_prompts_channel_retrieve
+      parameters:
+      - in: path
+        name: channel_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+          description: ''
+  /api/v1/prompts/trending-videos/:
+    get:
+      operationId: v1_prompts_trending_videos_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrendingVideos'
+          description: ''
+    post:
+      operationId: v1_prompts_trending_videos_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrendingVideos'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TrendingVideos'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TrendingVideos'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrendingVideos'
+          description: ''
+  /api/v1/prompts/trending-videos/{rhei_category}/{rhei_content_type}/:
+    get:
+      operationId: v1_prompts_trending_videos_retrieve
+      parameters:
+      - in: path
+        name: rhei_category
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: rhei_content_type
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrendingVideos'
+          description: ''
+  /api/v1/shortcuts/:
+    get:
+      operationId: v1_shortcuts_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: skill
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: title
+        schema:
+          type: string
+      - in: query
+        name: vtm
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedShortcutList'
+          description: ''
+    post:
+      operationId: v1_shortcuts_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shortcut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Shortcut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Shortcut'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shortcut'
+          description: ''
+  /api/v1/shortcuts/{id}/:
+    get:
+      operationId: v1_shortcuts_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this shortcut.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shortcut'
+          description: ''
+    put:
+      operationId: v1_shortcuts_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this shortcut.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Shortcut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Shortcut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Shortcut'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shortcut'
+          description: ''
+    patch:
+      operationId: v1_shortcuts_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this shortcut.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedShortcut'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedShortcut'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedShortcut'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shortcut'
+          description: ''
+    delete:
+      operationId: v1_shortcuts_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this shortcut.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/shortcuts/minified/:
+    get:
+      operationId: v1_shortcuts_minified_retrieve
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shortcut'
+          description: ''
+  /api/v1/sidebar/:
+    get:
+      operationId: v1_sidebar_list
+      parameters:
+      - in: query
+        name: vtm
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sidebar'
+          description: ''
+    post:
+      operationId: v1_sidebar_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sidebar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Sidebar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Sidebar'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sidebar'
+          description: ''
+  /api/v1/sidebar/{id}/:
+    get:
+      operationId: v1_sidebar_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this sidebar.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sidebar'
+          description: ''
+    put:
+      operationId: v1_sidebar_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this sidebar.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sidebar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Sidebar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Sidebar'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sidebar'
+          description: ''
+    patch:
+      operationId: v1_sidebar_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this sidebar.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSidebar'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSidebar'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSidebar'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sidebar'
+          description: ''
+    delete:
+      operationId: v1_sidebar_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this sidebar.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/skills/channel-skills/:
+    get:
+      operationId: v1_skills_channel_skills_list
+      parameters:
+      - in: query
+        name: skill
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChannelSkills'
+          description: ''
+    post:
+      operationId: v1_skills_channel_skills_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelSkills'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChannelSkills'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChannelSkills'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelSkills'
+          description: ''
+  /api/v1/skills/channel-skills/{id}/:
+    get:
+      operationId: v1_skills_channel_skills_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this channel skills.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelSkills'
+          description: ''
+    put:
+      operationId: v1_skills_channel_skills_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this channel skills.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelSkills'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ChannelSkills'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ChannelSkills'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelSkills'
+          description: ''
+    patch:
+      operationId: v1_skills_channel_skills_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this channel skills.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChannelSkills'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedChannelSkills'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedChannelSkills'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelSkills'
+          description: ''
+    delete:
+      operationId: v1_skills_channel_skills_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this channel skills.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/skills/generate-presigned-urls/:
+    post:
+      operationId: v1_skills_generate_presigned_urls_create
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/skills/lora-training-webhook/:
+    post:
+      operationId: v1_skills_lora_training_webhook_create
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/skills/skill/:
+    get:
+      operationId: v1_skills_skill_list
+      parameters:
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - in: query
+        name: vtm
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+          description: ''
+    post:
+      operationId: v1_skills_skill_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+  /api/v1/skills/skill/{slug}/:
+    get:
+      operationId: v1_skills_skill_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+    put:
+      operationId: v1_skills_skill_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Skill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+    patch:
+      operationId: v1_skills_skill_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSkill'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSkill'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSkill'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+          description: ''
+    delete:
+      operationId: v1_skills_skill_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/user-feedback/:
+    get:
+      operationId: v1_user_feedback_retrieve
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+    post:
+      operationId: v1_user_feedback_create
+      tags:
+      - v1
+      responses:
+        '201':
+          description: No response body
+  /api/v1/user-feedback/{id}/:
+    get:
+      operationId: v1_user_feedback_retrieve_2
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+    put:
+      operationId: v1_user_feedback_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+    patch:
+      operationId: v1_user_feedback_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+    delete:
+      operationId: v1_user_feedback_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/user-feedback/bug-report/:
+    post:
+      operationId: v1_user_feedback_bug_report_create
+      description: Submit a bug report via Intercom.
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/user-feedback/feature-request/:
+    post:
+      operationId: v1_user_feedback_feature_request_create
+      description: Submit a feature request via Intercom.
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/user-feedback/give-feedback/:
+    post:
+      operationId: v1_user_feedback_give_feedback_create
+      description: Submit give feedback via Intercom.
+      tags:
+      - v1
+      responses:
+        '200':
+          description: No response body
+  /api/v1/user-settings/:
+    get:
+      operationId: v1_user_settings_retrieve
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSetting'
+          description: ''
+    patch:
+      operationId: v1_user_settings_partial_update
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserSetting'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserSetting'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserSetting'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSetting'
+          description: ''
+  /api/v1/vtms/vtm/:
+    get:
+      operationId: v1_vtms_vtm_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VTM'
+          description: ''
+    post:
+      operationId: v1_vtms_vtm_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VTM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VTM'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VTM'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTM'
+          description: ''
+  /api/v1/vtms/vtm-user-preferences/:
+    get:
+      operationId: v1_vtms_vtm_user_preferences_list
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VTMUserPreferences'
+          description: ''
+    post:
+      operationId: v1_vtms_vtm_user_preferences_create
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTMUserPreferences'
+          description: ''
+  /api/v1/vtms/vtm-user-preferences/{id}/:
+    get:
+      operationId: v1_vtms_vtm_user_preferences_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this vtm user preferences.
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTMUserPreferences'
+          description: ''
+    put:
+      operationId: v1_vtms_vtm_user_preferences_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this vtm user preferences.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTMUserPreferences'
+          description: ''
+    patch:
+      operationId: v1_vtms_vtm_user_preferences_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this vtm user preferences.
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedVTMUserPreferences'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedVTMUserPreferences'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedVTMUserPreferences'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTMUserPreferences'
+          description: ''
+    delete:
+      operationId: v1_vtms_vtm_user_preferences_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this vtm user preferences.
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+  /api/v1/vtms/vtm-user-preferences/create-all/:
+    post:
+      operationId: v1_vtms_vtm_user_preferences_create_all_create
+      description: Create all VTMUserPreferences for a user+account+entity
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VTMUserPreferences'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTMUserPreferences'
+          description: ''
+  /api/v1/vtms/vtm/{slug}/:
+    get:
+      operationId: v1_vtms_vtm_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTM'
+          description: ''
+    put:
+      operationId: v1_vtms_vtm_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VTM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/VTM'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VTM'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTM'
+          description: ''
+    patch:
+      operationId: v1_vtms_vtm_partial_update
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedVTM'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedVTM'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedVTM'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VTM'
+          description: ''
+    delete:
+      operationId: v1_vtms_vtm_destroy
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - v1
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Card:
+      type: object
+      properties:
+        message_id:
+          type: integer
+        metadata:
+          nullable: true
+      required:
+      - message_id
+    Channel:
+      type: object
+      properties:
+        channel_id:
+          type: string
+          maxLength: 255
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        channel_description_pfield:
+          type: string
+        branded_entertainment_pfield:
+          type: string
+        rhei_category:
+          $ref: '#/components/schemas/RheiCategoryEnum'
+        rhei_content_type:
+          $ref: '#/components/schemas/RheiContentTypeEnum'
+        extra: {}
+      required:
+      - branded_entertainment_pfield
+      - channel_description_pfield
+      - channel_id
+      - created_at
+      - rhei_category
+      - rhei_content_type
+      - updated_at
+    ChannelSkills:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        skill:
+          type: string
+        external_channel_id:
+          type: string
+          readOnly: true
+        variables: {}
+        computed_variables:
+          nullable: true
+        presigned_images_path:
+          type: string
+          readOnly: true
+      required:
+      - external_channel_id
+      - id
+      - presigned_images_path
+      - skill
+      - variables
+    ChatSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        output_id:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        task_name:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        start_message:
+          type: string
+        account_id:
+          type: string
+          format: uuid
+          readOnly: true
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_active:
+          type: boolean
+        vtm:
+          type: string
+        message:
+          type: integer
+        personality:
+          type: string
+        channel:
+          type: string
+          format: uuid
+          readOnly: true
+      required:
+      - account_id
+      - channel
+      - created_at
+      - id
+      - message
+      - output_id
+      - personality
+      - start_message
+      - task_name
+      - updated_at
+      - user_id
+      - vtm
+    ChatSessionBrainstorm:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        loglines:
+          nullable: true
+        hooks:
+          nullable: true
+        trends:
+          nullable: true
+        stories:
+          nullable: true
+        triggers:
+          nullable: true
+        chat_session:
+          type: string
+          format: uuid
+      required:
+      - chat_session
+      - created_at
+      - id
+      - updated_at
+    ChatSessionMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        message: {}
+        text_message:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatSessionMessageTypeEnum'
+        vtm:
+          type: string
+          maxLength: 50
+        personality:
+          type: string
+          maxLength: 50
+        account_id:
+          type: string
+          readOnly: true
+          nullable: true
+        extra_data:
+          nullable: true
+        source:
+          $ref: '#/components/schemas/SourceEnum'
+        user_email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        user_first_name:
+          type: string
+          nullable: true
+          maxLength: 50
+        config:
+          nullable: true
+        task:
+          nullable: true
+        metadata:
+          nullable: true
+        channel:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        chat_session:
+          type: string
+          format: uuid
+      required:
+      - account_id
+      - channel
+      - chat_session
+      - created_at
+      - id
+      - message
+      - personality
+      - type
+      - user
+      - vtm
+    ChatSessionMessageTypeEnum:
+      enum:
+      - user
+      - system
+      type: string
+      description: |-
+        * `user` - User
+        * `system` - System
+    DataIngestionStatusEnum:
+      enum:
+      - 1
+      - 2
+      type: integer
+      description: |-
+        * `1` - Connected
+        * `2` - Data available
+    Feedback:
+      type: object
+      properties:
+        rating:
+          $ref: '#/components/schemas/RatingEnum'
+        tags:
+          nullable: true
+        text:
+          type: string
+          nullable: true
+      required:
+      - rating
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          maxLength: 50
+        text_message:
+          type: string
+          readOnly: true
+        message: {}
+        type:
+          type: string
+          default: user
+        vtm:
+          type: string
+          maxLength: 50
+        personality:
+          type: string
+        feedback:
+          allOf:
+          - $ref: '#/components/schemas/Feedback'
+          readOnly: true
+        channel_id:
+          type: string
+        extra_data: {}
+        source:
+          type: string
+        metadata:
+          nullable: true
+      required:
+      - channel_id
+      - created_at
+      - feedback
+      - id
+      - message
+      - personality
+      - text_message
+      - user
+      - vtm
+    PaginatedChatSessionMessageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatSessionMessage'
+    PaginatedMessageList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+    PaginatedShortcutList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shortcut'
+    PaginatedVideoList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+    PatchedChannelSkills:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        skill:
+          type: string
+        external_channel_id:
+          type: string
+          readOnly: true
+        variables: {}
+        computed_variables:
+          nullable: true
+        presigned_images_path:
+          type: string
+          readOnly: true
+    PatchedChatSession:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        output_id:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        task_name:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        start_message:
+          type: string
+        account_id:
+          type: string
+          format: uuid
+          readOnly: true
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        is_active:
+          type: boolean
+        vtm:
+          type: string
+        message:
+          type: integer
+        personality:
+          type: string
+        channel:
+          type: string
+          format: uuid
+          readOnly: true
+    PatchedChatSessionBrainstorm:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        loglines:
+          nullable: true
+        hooks:
+          nullable: true
+        trends:
+          nullable: true
+        stories:
+          nullable: true
+        triggers:
+          nullable: true
+        chat_session:
+          type: string
+          format: uuid
+    PatchedChatSessionMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+        message: {}
+        text_message:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatSessionMessageTypeEnum'
+        vtm:
+          type: string
+          maxLength: 50
+        personality:
+          type: string
+          maxLength: 50
+        account_id:
+          type: string
+          readOnly: true
+          nullable: true
+        extra_data:
+          nullable: true
+        source:
+          $ref: '#/components/schemas/SourceEnum'
+        user_email:
+          type: string
+          format: email
+          nullable: true
+          maxLength: 254
+        user_first_name:
+          type: string
+          nullable: true
+          maxLength: 50
+        config:
+          nullable: true
+        task:
+          nullable: true
+        metadata:
+          nullable: true
+        channel:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+        chat_session:
+          type: string
+          format: uuid
+    PatchedMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          maxLength: 50
+        text_message:
+          type: string
+          readOnly: true
+        message: {}
+        type:
+          type: string
+          default: user
+        vtm:
+          type: string
+          maxLength: 50
+        personality:
+          type: string
+        feedback:
+          allOf:
+          - $ref: '#/components/schemas/Feedback'
+          readOnly: true
+        channel_id:
+          type: string
+        extra_data: {}
+        source:
+          type: string
+        metadata:
+          nullable: true
+    PatchedPinnedShortcut:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        shortcut:
+          type: string
+          format: uuid
+          nullable: true
+        default_shortcut:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedProject:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        cards:
+          nullable: true
+        creator:
+          type: string
+          format: uuid
+        vtms:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+            pattern: ^[-a-zA-Z0-9_]+$
+          nullable: true
+        channel:
+          type: string
+          format: uuid
+    PatchedShortcut:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          nullable: true
+          maxLength: 255
+        instructions:
+          type: string
+          nullable: true
+          maxLength: 1000
+        creator:
+          type: string
+          format: uuid
+          nullable: true
+        vtm:
+          type: string
+          format: uuid
+        skill:
+          type: string
+          format: uuid
+        template:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+        is_pinned:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedSidebar:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        creator:
+          type: string
+          format: uuid
+        vtm:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        channel:
+          type: string
+          format: uuid
+    PatchedSkill:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        vtm:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/Variable'
+        is_active:
+          type: boolean
+        is_editable:
+          type: boolean
+    PatchedUserSetting:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        primary_account:
+          type: string
+          format: uuid
+          nullable: true
+        primary_channel:
+          type: string
+          format: uuid
+          nullable: true
+    PatchedVTM:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        personality:
+          allOf:
+          - $ref: '#/components/schemas/Personality'
+          readOnly: true
+        personality_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 255
+        position:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        avatar:
+          type: string
+          format: uri
+          maxLength: 200
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+    PatchedVTMUserPreferences:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        account_id:
+          type: string
+          format: uuid
+          readOnly: true
+        channel_id:
+          type: string
+          format: uuid
+          readOnly: true
+        has_new_message:
+          type: boolean
+        is_visible:
+          type: boolean
+        vtm:
+          type: string
+          nullable: true
+    PatchedVideo:
+      type: object
+      properties:
+        video_id:
+          type: string
+          maxLength: 255
+        channel_id:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        published_at:
+          type: string
+          format: date-time
+        tiny_summary:
+          type: string
+        youtube_category_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        youtube_category:
+          type: string
+          maxLength: 255
+        rhei_category_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        rhei_category:
+          type: string
+          maxLength: 255
+        content_type:
+          type: string
+          maxLength: 255
+        content_subject:
+          type: string
+          maxLength: 255
+        like_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        view_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        comment_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        thumbnail:
+          type: string
+          maxLength: 255
+        privacy_status:
+          $ref: '#/components/schemas/PrivacyStatusEnum'
+        upload_status:
+          $ref: '#/components/schemas/UploadStatusEnum'
+        is_published:
+          type: boolean
+    PatchedYoutubeChannel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        account_id:
+          type: string
+          readOnly: true
+          maxLength: 255
+        data_ingestion_status_display:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        subscriber_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        view_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        thumbnail:
+          type: string
+          format: uri
+          maxLength: 200
+        channel_external_id:
+          type: string
+          maxLength: 255
+        youtube_subscription_expire_at:
+          type: string
+          format: date-time
+        subscription_callback_pending:
+          type: boolean
+        data_ingestion_status:
+          allOf:
+          - $ref: '#/components/schemas/DataIngestionStatusEnum'
+          minimum: -2147483648
+          maximum: 2147483647
+        data_ingestion_started_at:
+          type: string
+          format: date-time
+          nullable: true
+        data_ingestion_completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        data_ingestion_processed_tables: {}
+        enabled:
+          type: boolean
+    Personality:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    PinnedShortcut:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+        shortcut:
+          type: string
+          format: uuid
+          nullable: true
+        default_shortcut:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - shortcut
+      - updated_at
+      - user
+    PrivacyStatusEnum:
+      enum:
+      - public
+      - private
+      - unlisted
+      type: string
+      description: |-
+        * `public` - Public
+        * `private` - Private
+        * `unlisted` - Unlisted
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        cards:
+          nullable: true
+        creator:
+          type: string
+          format: uuid
+        vtms:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+            pattern: ^[-a-zA-Z0-9_]+$
+          nullable: true
+        channel:
+          type: string
+          format: uuid
+      required:
+      - channel
+      - created_at
+      - creator
+      - id
+      - name
+      - updated_at
+    RatingEnum:
+      enum:
+      - thumbsUp
+      - thumbsDown
+      type: string
+      description: |-
+        * `thumbsUp` - Thumbs Up
+        * `thumbsDown` - Thumbs Down
+    RheiCategoryEnum:
+      enum:
+      - ENTERTAINMENT
+      - GAMING
+      - SPORTS
+      - MUSIC
+      - SCIENCE_TECHNOLOGY
+      - LIFESTYLE
+      - EDUCATION
+      - CURRENT_AFFAIRS
+      type: string
+      description: |-
+        * `ENTERTAINMENT` - ENTERTAINMENT
+        * `GAMING` - GAMING
+        * `SPORTS` - SPORTS
+        * `MUSIC` - MUSIC
+        * `SCIENCE_TECHNOLOGY` - SCIENCE_TECHNOLOGY
+        * `LIFESTYLE` - LIFESTYLE
+        * `EDUCATION` - EDUCATION
+        * `CURRENT_AFFAIRS` - CURRENT_AFFAIRS
+    RheiContentTypeEnum:
+      enum:
+      - CLIPS & TRAILERS
+      - SKETCHES
+      - STAND-UP
+      - VLOGS
+      - ANIMATION
+      - PODCASTS & TALK SHOW
+      - AWARDS & EVENTS
+      - VIRAL UGC
+      - MEMES & INTERNET CULTURE
+      - NEWS & UPDATES
+      - LET'S PLAYS
+      - WALKTHROUGHS
+      - TUTORIAL & TIPS
+      - REVIEWS & RANKINGS
+      - LIVESTREAM
+      - ANALYSIS & COMMENTARY
+      - TOURNAMENT & EVENTS
+      - SPEEDRUNS
+      - HIGHLIGHTS
+      - INTERVIEWS & BTS
+      - FANTASY SPORTS
+      - TRAINING & SKILLS
+      - CHALLENGES & COMPETITION
+      - REACTIONS
+      - REVIEWS & UNBOXING
+      - PERFORMANCE
+      - DIY & HACKS
+      - PRODUCT COMPARISONS
+      - CURATIONAL
+      - ROUTINES
+      - CHALLENGES
+      - INTERVIEWS
+      - DIY PROJECTS
+      - TRANSFORMATIONS
+      - MOTIVATIONAL
+      - TOURS
+      - STORYTIME
+      - EXPLAINERS
+      - COURSES & LECTURES
+      - STUDY TIPS & TECHNIQUES
+      - LANGUAGE LEARNING
+      - DEBATES & DISCUSSIONS
+      - DOCUMENTARIES
+      - EDITORIAL & OPINION
+      - PODCASTS
+      - PRESS CONFERENCES
+      - WEBINARS
+      - INFOGRAPHICS & DATA VISUALIZATION
+      type: string
+      description: |-
+        * `CLIPS & TRAILERS` - CLIPS & TRAILERS
+        * `SKETCHES` - SKETCHES
+        * `STAND-UP` - STAND-UP
+        * `VLOGS` - VLOGS
+        * `ANIMATION` - ANIMATION
+        * `PODCASTS & TALK SHOW` - PODCASTS & TALK SHOW
+        * `AWARDS & EVENTS` - AWARDS & EVENTS
+        * `VIRAL UGC` - VIRAL UGC
+        * `MEMES & INTERNET CULTURE` - MEMES & INTERNET CULTURE
+        * `NEWS & UPDATES` - NEWS & UPDATES
+        * `LET'S PLAYS` - LET'S PLAYS
+        * `WALKTHROUGHS` - WALKTHROUGHS
+        * `TUTORIAL & TIPS` - TUTORIAL & TIPS
+        * `REVIEWS & RANKINGS` - REVIEWS & RANKINGS
+        * `LIVESTREAM` - LIVESTREAM
+        * `ANALYSIS & COMMENTARY` - ANALYSIS & COMMENTARY
+        * `TOURNAMENT & EVENTS` - TOURNAMENT & EVENTS
+        * `SPEEDRUNS` - SPEEDRUNS
+        * `HIGHLIGHTS` - HIGHLIGHTS
+        * `INTERVIEWS & BTS` - INTERVIEWS & BTS
+        * `FANTASY SPORTS` - FANTASY SPORTS
+        * `TRAINING & SKILLS` - TRAINING & SKILLS
+        * `CHALLENGES & COMPETITION` - CHALLENGES & COMPETITION
+        * `REACTIONS` - REACTIONS
+        * `REVIEWS & UNBOXING` - REVIEWS & UNBOXING
+        * `PERFORMANCE` - PERFORMANCE
+        * `DIY & HACKS` - DIY & HACKS
+        * `PRODUCT COMPARISONS` - PRODUCT COMPARISONS
+        * `CURATIONAL` - CURATIONAL
+        * `ROUTINES` - ROUTINES
+        * `CHALLENGES` - CHALLENGES
+        * `INTERVIEWS` - INTERVIEWS
+        * `DIY PROJECTS` - DIY PROJECTS
+        * `TRANSFORMATIONS` - TRANSFORMATIONS
+        * `MOTIVATIONAL` - MOTIVATIONAL
+        * `TOURS` - TOURS
+        * `STORYTIME` - STORYTIME
+        * `EXPLAINERS` - EXPLAINERS
+        * `COURSES & LECTURES` - COURSES & LECTURES
+        * `STUDY TIPS & TECHNIQUES` - STUDY TIPS & TECHNIQUES
+        * `LANGUAGE LEARNING` - LANGUAGE LEARNING
+        * `DEBATES & DISCUSSIONS` - DEBATES & DISCUSSIONS
+        * `DOCUMENTARIES` - DOCUMENTARIES
+        * `EDITORIAL & OPINION` - EDITORIAL & OPINION
+        * `PODCASTS` - PODCASTS
+        * `PRESS CONFERENCES` - PRESS CONFERENCES
+        * `WEBINARS` - WEBINARS
+        * `INFOGRAPHICS & DATA VISUALIZATION` - INFOGRAPHICS & DATA VISUALIZATION
+    Shortcut:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          nullable: true
+          maxLength: 255
+        instructions:
+          type: string
+          nullable: true
+          maxLength: 1000
+        creator:
+          type: string
+          format: uuid
+          nullable: true
+        vtm:
+          type: string
+          format: uuid
+        skill:
+          type: string
+          format: uuid
+        template:
+          type: string
+          format: uuid
+          nullable: true
+        is_active:
+          type: boolean
+        is_pinned:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - is_pinned
+      - skill
+      - updated_at
+      - vtm
+    Sidebar:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        creator:
+          type: string
+          format: uuid
+        vtm:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        channel:
+          type: string
+          format: uuid
+      required:
+      - channel
+      - created_at
+      - creator
+      - id
+      - updated_at
+      - vtm
+    Skill:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        vtm:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/Variable'
+        is_active:
+          type: boolean
+        is_editable:
+          type: boolean
+      required:
+      - description
+      - id
+      - name
+      - slug
+      - variables
+      - vtm
+    SourceEnum:
+      enum:
+      - chat
+      - workflow
+      - shortcut
+      - onboarding
+      type: string
+      description: |-
+        * `chat` - Chat
+        * `workflow` - Workflow
+        * `shortcut` - Shortcut
+        * `onboarding` - Onboarding
+    TrendingVideos:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        rhei_category:
+          type: string
+          maxLength: 255
+        rhei_content_type:
+          type: string
+          maxLength: 255
+        video_id:
+          type: string
+          maxLength: 255
+        short_summary:
+          type: string
+        tiny_summary:
+          type: string
+        video_title:
+          type: string
+          maxLength: 255
+        channel_title:
+          type: string
+          maxLength: 255
+        thumbnails_medium_url:
+          type: string
+          format: uri
+          maxLength: 200
+        published_at:
+          type: string
+          format: date-time
+          readOnly: true
+        is_top_up:
+          type: boolean
+        view_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        extra: {}
+      required:
+      - channel_title
+      - created_at
+      - id
+      - published_at
+      - rhei_category
+      - rhei_content_type
+      - short_summary
+      - thumbnails_medium_url
+      - tiny_summary
+      - updated_at
+      - video_id
+      - video_title
+    UploadStatusEnum:
+      enum:
+      - processed
+      - failed
+      - rejected
+      - uploaded
+      - deleted
+      type: string
+      description: |-
+        * `processed` - Processed
+        * `failed` - Failed
+        * `rejected` - Rejected
+        * `uploaded` - Uploaded
+        * `deleted` - Deleted
+    UserSetting:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        primary_account:
+          type: string
+          format: uuid
+          nullable: true
+        primary_channel:
+          type: string
+          format: uuid
+          nullable: true
+      required:
+      - user_id
+    VTM:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        personality:
+          allOf:
+          - $ref: '#/components/schemas/Personality'
+          readOnly: true
+        personality_id:
+          type: string
+          format: uuid
+          writeOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        slug:
+          type: string
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        name:
+          type: string
+          maxLength: 255
+        position:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        avatar:
+          type: string
+          format: uri
+          maxLength: 200
+        is_active:
+          type: boolean
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+      required:
+      - avatar
+      - created_at
+      - description
+      - id
+      - name
+      - personality
+      - personality_id
+      - position
+      - updated_at
+    VTMUserPreferences:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user_id:
+          type: string
+          format: uuid
+          readOnly: true
+        account_id:
+          type: string
+          format: uuid
+          readOnly: true
+        channel_id:
+          type: string
+          format: uuid
+          readOnly: true
+        has_new_message:
+          type: boolean
+        is_visible:
+          type: boolean
+        vtm:
+          type: string
+          nullable: true
+      required:
+      - account_id
+      - channel_id
+      - created_at
+      - id
+      - updated_at
+      - user_id
+      - vtm
+    Variable:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        type:
+          $ref: '#/components/schemas/VariableTypeEnum'
+        placeholder:
+          type: string
+          maxLength: 255
+      required:
+      - name
+      - placeholder
+      - type
+    VariableTypeEnum:
+      enum:
+      - text
+      - long_text
+      type: string
+      description: |-
+        * `text` - Text
+        * `long_text` - Long Text
+    Video:
+      type: object
+      properties:
+        video_id:
+          type: string
+          maxLength: 255
+        channel_id:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        published_at:
+          type: string
+          format: date-time
+        tiny_summary:
+          type: string
+        youtube_category_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        youtube_category:
+          type: string
+          maxLength: 255
+        rhei_category_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        rhei_category:
+          type: string
+          maxLength: 255
+        content_type:
+          type: string
+          maxLength: 255
+        content_subject:
+          type: string
+          maxLength: 255
+        like_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        view_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        comment_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        thumbnail:
+          type: string
+          maxLength: 255
+        privacy_status:
+          $ref: '#/components/schemas/PrivacyStatusEnum'
+        upload_status:
+          $ref: '#/components/schemas/UploadStatusEnum'
+        is_published:
+          type: boolean
+      required:
+      - channel_id
+      - content_subject
+      - content_type
+      - published_at
+      - rhei_category
+      - rhei_category_id
+      - title
+      - video_id
+      - youtube_category
+      - youtube_category_id
+    YoutubeChannel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        account_id:
+          type: string
+          readOnly: true
+          maxLength: 255
+        data_ingestion_status_display:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        subscriber_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        view_count:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+        thumbnail:
+          type: string
+          format: uri
+          maxLength: 200
+        channel_external_id:
+          type: string
+          maxLength: 255
+        youtube_subscription_expire_at:
+          type: string
+          format: date-time
+        subscription_callback_pending:
+          type: boolean
+        data_ingestion_status:
+          allOf:
+          - $ref: '#/components/schemas/DataIngestionStatusEnum'
+          minimum: -2147483648
+          maximum: 2147483647
+        data_ingestion_started_at:
+          type: string
+          format: date-time
+          nullable: true
+        data_ingestion_completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        data_ingestion_processed_tables: {}
+        enabled:
+          type: boolean
+      required:
+      - account_id
+      - channel_external_id
+      - created_at
+      - data_ingestion_status_display
+      - id
+      - thumbnail
+      - title
+      - updated_at
