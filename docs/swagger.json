@@ -1,0 +1,186 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Example API Documentation",
+        "title": "Example API",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "basePath": "/api/v1",
+    "paths": {
+        "/items": {
+            "get": {
+                "description": "List items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [],
+                "summary": "List items",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "$ref": "#/definitions/exampleapi.ListItemsResponse"
+                        },
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Language of the response"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.Error"
+                        },
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Language of the response"
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/apierror.Error"
+                        },
+                        "headers": {
+                            "headers": {
+                                "Content-Language": {
+                                    "type": "string",
+                                    "description": "Language of the response"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "headers": {
+                            "headers": {
+                                "Content-Language": {
+                                    "type": "string",
+                                    "description": "Language of the response"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Service Unavailable",
+                        "headers": {
+                            "Content-Language": {
+                                "type": "string",
+                                "description": "Language of the response"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "apierror.Error": {
+            "type": "object",
+            "properties": {
+                "cause": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "error": {
+                    "$ref": "#/definitions/apierror.ErrorCode"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "apierror.ErrorCode": {
+            "type": "string",
+            "enum": [
+                "invalid_params_error",
+                "empty_params_error",
+                "validation_error",
+                "invalid_data_error",
+                "constraint_error",
+                "auth_error",
+                "conflict_error",
+                "service_unavailable_error",
+                "operation_failed_error",
+                "resource_error"
+            ],
+            "x-enum-varnames": [
+                "InvalidParamsErrorCode",
+                "EmptyParamsErrorCode",
+                "ValidationErrorCode",
+                "InvalidDataErrorCode",
+                "ConstraintErrorCode",
+                "AuthErrorCode",
+                "ConflictErrorCode",
+                "ServiceUnavailableErrorCode",
+                "OperationFailedErrorCode",
+                "ResourceErrorCode"
+            ]
+        },
+        "exampleapi.Item": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "exampleapi.ListItemsResponse": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/exampleapi.Item"
+            }
+        },
+        "securityDefinitions": {
+            "BearerAuth": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        },
+        "externalDocs": {
+            "description": "OpenAPI",
+            "url": "https://swagger.io/resources/open-api"
+        }
+    }
+}
